@@ -1,15 +1,19 @@
-## Put comments here that give an overall description of what your
-## functions do
+corr <- function(directory, threshold = 0) {
 
-## Write a short comment describing this function
-
-makeCacheMatrix <- function(x = matrix()) {
-
-}
-
-
-## Write a short comment describing this function
-
-cacheSolve <- function(x, ...) {
-        ## Return a matrix that is the inverse of 'x'
+  source("complete.R")
+  completeCases <- complete(directory)
+  casesAboveThreshold <- completeCases[completeCases$nobs > threshold,1]
+  allFiles <- list.files(path = directory, full.names = TRUE)
+  correlations <- rep(NA,length(casesAboveThreshold))
+  for (i in casesAboveThreshold) {
+    fileData <- (read.csv(allFiles[i]))
+    completeCases <- complete.cases(fileData)
+    validSulfateData <- fileData[completeCases, 2]
+    validNitrateData <- fileData[completeCases, 3]
+    correlations[i] <- cor(x = validSulfateData, y = validNitrateData)
+    print(head(fileData[completeCases,]))
+    print(validSulfateData)
+    print(validNitrateData)
+  }
+  correlations <- correlations[complete.cases(correlations)]
 }
